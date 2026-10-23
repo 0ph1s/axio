@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="pt-BR" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AXIO | Data Science, Web e Apps</title>
+  <meta name="description" content="Axio: inteligência de dados, desenvolvimento web e apps de alta performance. Machine learning, análise preditiva, aplicações web imersivas e soluções mobile escaláveis.">
+  <meta name="theme-color" content="#120D08">
+  <meta property="og:title" content="AXIO | Data Science, Web e Apps">
+  <meta property="og:description" content="Inteligência de dados, web e apps de alta performance.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23120D08'/%3E%3Ctext x='16' y='24' font-family='monospace' font-size='22' font-weight='700' text-anchor='middle' fill='%23FFB547'%3EA%3C/text%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <script>document.documentElement.classList.replace('no-js', 'js');</script>
+</head>
+<body>
+  <!-- Fundo: shader ASCII + CRT (WebGL) -->
+  <canvas id="gl" class="gl" aria-hidden="true"></canvas>
+  <div class="crt" aria-hidden="true"></div>
+
+  <!-- Sequência de boot -->
+  <div class="boot" aria-hidden="true">
+    <pre class="boot__log"></pre>
+    <p class="boot__skip">clique ou pressione qualquer tecla para pular</p>
+  </div>
+
+  <!-- Cursor customizado -->
+  <div class="cursor" aria-hidden="true">
+    <span class="cursor__frame"></span>
+    <span class="cursor__dot"></span>
+    <span class="cursor__label"></span>
+  </div>
+
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+  <!-- HUD superior -->
+  <header class="hud hud--top">
+    <a class="brand" href="#top" aria-label="AXIO, voltar ao topo">AXIO<span class="brand__caret" aria-hidden="true">_</span></a>
+    <nav class="nav" id="nav" aria-label="Principal">
+      <ul>
+        <li><a href="#servicos" data-nav>cd servicos</a></li>
+        <li><a href="#projetos" data-nav>cd projetos</a></li>
+        <li><a href="#sobre" data-nav>cd sobre</a></li>
+        <li><a href="#contato" data-nav>cd contato</a></li>
+      </ul>
+    </nav>
+    <div class="hud__status">
+      <span class="led" aria-hidden="true"></span>
+      <span class="hud__online">online</span>
+      <time class="clock" data-clock>00:00:00</time>
+    </div>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav">menu</button>
+  </header>
+
+  <!-- HUD inferior: telemetria ao vivo -->
+  <div class="hud hud--bottom" aria-hidden="true">
+    <span>x <b data-mx>0000</b> y <b data-my>0000</b></span>
+    <span class="hud__progress"><i data-progress></i></span>
+    <span><b data-fps>--</b> fps</span>
+  </div>
+
+  <main id="conteudo">
+    <!-- 1. HERO -->
+    <section class="hero" id="top" aria-label="Apresentação">
+      <p class="hero__path"><span class="user">axio@core</span>:~$ <span data-hero-cmd>./axio --init</span></p>
+
+      <div class="hero__logo" data-logo aria-hidden="true">
+        <pre class="ansi ansi--hero">
+ █████╗ ██╗  ██╗██╗ ██████╗
+██╔══██╗╚██╗██╔╝██║██╔═══██╗
+███████║ ╚███╔╝ ██║██║   ██║
+██╔══██║ ██╔██╗ ██║██║   ██║
+██║  ██║██╔╝ ██╗██║╚██████╔╝
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝ ╚═════╝</pre>
+      </div>
+
+      <div class="hero__grid">
+        <h1 class="hero__headline" data-hero-line><span class="sr-only">AXIO: </span>Inteligência de dados, web e apps de alta performance.</h1>
+        <div class="hero__side">
+          <p class="hero__lead" data-hero-line>Transformamos dados brutos em modelos que preveem e construímos produtos digitais que respondem em milissegundos, do algoritmo ao pixel.</p>
+          <div class="hero__ctas" data-hero-line>
+            <a class="cmd cmd--primary" href="#projetos" data-cursor="run" data-scroll-to>EXPLORE_DATA</a>
+            <a class="cmd" href="#contato" data-cursor="run" data-scroll-to>INIT_CONTACT</a>
+          </div>
+        </div>
+      </div>
+
+      <p class="hero__hint" aria-hidden="true">mova o cursor sobre o logo <span class="blink">▮</span></p>
+    </section>
+
+    <!-- 2. SERVIÇOS -->
+    <section class="section services" id="servicos" aria-labelledby="servicos-title">
+      <header class="section__head">
+        <p class="prompt" data-prompt><span class="user">axio@core</span>:~$ <span class="prompt__cmd">ls ./servicos</span></p>
+        <h2 class="section__title" id="servicos-title" data-out>Três núcleos, um sistema.</h2>
+        <p class="section__lead" data-out>Os dados informam o produto, a engenharia o torna rápido e o mobile o coloca no bolso de quem usa. Cada projeto passa pelos três.</p>
+      </header>
+
+      <div class="tmux" data-tmux>
+        <article class="pane pane--main is-active" data-pane="0" tabindex="0" aria-labelledby="pane-0-title">
+          <div class="pane__bar"><span>~/servicos/data-science</span><span class="pane__state">model: ready</span></div>
+          <div class="pane__body">
+            <pre class="pane__art" aria-hidden="true" data-art>  ▲
+  │                · ╭──
+  │          ·  ·╭──╯·
+  │       ·  ╭──╯  ·
+  │    · ╭──╯·
+  │  ·╭──╯  ·
+  │╭──╯·
+  └─────────────────────▶</pre>
+            <h3 class="pane__title" id="pane-0-title">Data Science</h3>
+            <p class="pane__text">Modelos que encontram padrões nos seus dados e antecipam o que vem a seguir, com métricas que você consegue auditar.</p>
+            <ul class="flags">
+              <li><code>--machine-learning</code><span>classificação, regressão e redes neurais</span></li>
+              <li><code>--analise-preditiva</code><span>previsão de demanda, risco e comportamento</span></li>
+              <li><code>--reducao-dimensional</code><span>PCA e engenharia de atributos</span></li>
+              <li><code>--visualizacao</code><span>dashboards que explicam o modelo</span></li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="pane" data-pane="1" tabindex="0" aria-labelledby="pane-1-title">
+          <div class="pane__bar"><span>~/servicos/web</span><span class="pane__state">build: passing</span></div>
+          <div class="pane__body">
+            <pre class="pane__art" aria-hidden="true" data-art>┌─────────────────────┐
+│ ○ ○ ○  ~/web/app    │
+├─────────────────────┤
+│ ▓▓▓▓▓▓▓▓▓▓░░░  ░░░  │
+│ ░░░░  ▓▓▓▓▓▓▓▓▓▓▓▓  │
+│ &lt;/&gt;  { }  ( )  ;   │
+└─────────────────────┘</pre>
+            <h3 class="pane__title" id="pane-1-title">Web Development</h3>
+            <p class="pane__text">Aplicações web modernas e imersivas, rápidas por padrão e acessíveis em qualquer tela.</p>
+            <ul class="flags">
+              <li><code>--web-apps</code><span>plataformas, painéis e SaaS</span></li>
+              <li><code>--imersivo</code><span>WebGL, shaders e animação</span></li>
+              <li><code>--performance</code><span>Core Web Vitals no verde</span></li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="pane" data-pane="2" tabindex="0" aria-labelledby="pane-2-title">
+          <div class="pane__bar"><span>~/servicos/apps</span><span class="pane__state">deploy: ok</span></div>
+          <div class="pane__body">
+            <pre class="pane__art" aria-hidden="true" data-art>  ┌───────────┐
+  │ ▂▄▆    ███│
+  │ ┌───────┐ │
+  │ │ ░░▓▓░ │ │
+  │ └───────┘ │
+  │ ▓▓  ▓▓  ▓▓│
+  └─────○─────┘</pre>
+            <h3 class="pane__title" id="pane-2-title">Apps Development</h3>
+            <p class="pane__text">Soluções mobile escaláveis, do protótipo à loja, prontas para crescer com a sua base de usuários.</p>
+            <ul class="flags">
+              <li><code>--ios-android</code><span>nativo e multiplataforma</span></li>
+              <li><code>--escalavel</code><span>arquitetura que aguenta o crescimento</span></li>
+              <li><code>--dados-no-app</code><span>modelos e APIs integrados</span></li>
+            </ul>
+          </div>
+        </article>
+
+        <div class="tmux__status" aria-label="Painéis">
+          <span class="tmux__session">[axio]</span>
+          <button type="button" data-goto="0" class="is-active">0:data-science</button>
+          <button type="button" data-goto="1">1:web</button>
+          <button type="button" data-goto="2">2:apps</button>
+          <span class="tmux__clock" data-clock-short>00:00</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. PROJETOS -->
+    <section class="section projects" id="projetos" aria-labelledby="projetos-title">
+      <header class="section__head">
+        <p class="prompt" data-prompt><span class="user">axio@core</span>:~$ <span class="prompt__cmd">git log --author=0ph1s</span></p>
+        <h2 class="section__title" id="projetos-title" data-out>Telemetria de projetos.</h2>
+        <p class="section__lead" data-out>Três repositórios abertos, três canais. Sintonize um para ver o sinal.</p>
+      </header>
+
+      <div class="telemetry">
+        <div class="channels" role="tablist" aria-label="Projetos">
+          <button class="ch is-active" role="tab" id="tab-1" aria-selected="true" aria-controls="prj-1" data-channel="0">
+            <span class="ch__num">CH1</span>
+            <span class="ch__name">Asteroides potencialmente perigosos</span>
+            <span class="ch__tag">data science</span>
+          </button>
+          <button class="ch" role="tab" id="tab-2" aria-selected="false" aria-controls="prj-2" data-channel="1" tabindex="-1">
+            <span class="ch__num">CH2</span>
+            <span class="ch__name">PCA dos planetas do Sistema Solar</span>
+            <span class="ch__tag">data analytics</span>
+          </button>
+          <button class="ch" role="tab" id="tab-3" aria-selected="false" aria-controls="prj-3" data-channel="2" tabindex="-1">
+            <span class="ch__num">CH3</span>
+            <span class="ch__name">Bit Transitions</span>
+            <span class="ch__tag">web / low-level</span>
+          </button>
+        </div>
+
+        <div class="monitor">
+          <div class="monitor__screen">
+            <canvas class="monitor__canvas" data-viz aria-hidden="true"></canvas>
+            <div class="monitor__static" aria-hidden="true"></div>
+            <div class="monitor__hud" aria-hidden="true">
+              <span data-viz-ch>CH1</span>
+              <span class="monitor__rec"><i></i>live</span>
+            </div>
+            <p class="monitor__caption" data-viz-caption aria-hidden="true">visualização ilustrativa</p>
+          </div>
+
+          <article class="readout is-active" role="tabpanel" id="prj-1" aria-labelledby="tab-1">
+            <p class="readout__repo">0ph1s/Neural-Network-Approach-to-Binary-Logistic-Classification-of-Potentially-Hazardous-Asteroids</p>
+            <h3 class="readout__title">Classificação binária de asteroides potencialmente perigosos com redes neurais</h3>
+            <p class="readout__text">Uma rede neural densa decide se um objeto próximo da Terra é perigoso a partir de diâmetro estimado, velocidade relativa, distância de passagem e magnitude absoluta. Os hiperparâmetros foram ajustados automaticamente com KerasTuner.</p>
+            <dl class="readout__data">
+              <div><dt>dados</dt><dd>NASA Nearest Earth Objects</dd></div>
+              <div><dt>modelo</dt><dd>ReLU + saída sigmoide, Adam</dd></div>
+              <div><dt>acurácia</dt><dd>91%</dd></div>
+              <div><dt>AUC</dt><dd>0.91</dd></div>
+            </dl>
+            <a class="cmd cmd--primary" href="https://github.com/0ph1s/Neural-Network-Approach-to-Binary-Logistic-Classification-of-Potentially-Hazardous-Asteroids" target="_blank" rel="noopener noreferrer" data-cursor="open">OPEN_REPO ↗</a>
+          </article>
+
+          <article class="readout" role="tabpanel" id="prj-2" aria-labelledby="tab-2">
+            <p class="readout__repo">0ph1s/Principal-Component-Analysis-of-the-Solar-System-Planets</p>
+            <h3 class="readout__title">Análise de Componentes Principais dos planetas do Sistema Solar</h3>
+            <p class="readout__text">Os atributos dos oito planetas, de anéis e campo magnético a pressão de superfície, são padronizados e reduzidos aos componentes que mais explicam a variância, revelando os grupos rochosos e gigantes numa projeção 3D.</p>
+            <dl class="readout__data">
+              <div><dt>método</dt><dd>PCA, autovetores da covariância</dd></div>
+              <div><dt>stack</dt><dd>Python, pandas, scikit-learn</dd></div>
+              <div><dt>saída</dt><dd>projeção 3D rotulada</dd></div>
+              <div><dt>no monitor</dt><dd>PCA calculada ao vivo</dd></div>
+            </dl>
+            <a class="cmd cmd--primary" href="https://github.com/0ph1s/Principal-Component-Analysis-of-the-Solar-System-Planets" target="_blank" rel="noopener noreferrer" data-cursor="open">OPEN_REPO ↗</a>
+          </article>
+
+          <article class="readout" role="tabpanel" id="prj-3" aria-labelledby="tab-3">
+            <p class="readout__repo">0ph1s/bit_transitions</p>
+            <h3 class="readout__title">Bit Transitions</h3>
+            <p class="readout__text">Uma coleção de transições pixeladas para interfaces web: efeitos leves, suaves e fáceis de customizar, pensados para dar ritmo à navegação sem pesar no carregamento.</p>
+            <dl class="readout__data">
+              <div><dt>tipo</dt><dd>transições pixel-based</dd></div>
+              <div><dt>foco</dt><dd>leveza e customização</dd></div>
+              <div><dt>stack</dt><dd>HTML, CSS, JavaScript</dd></div>
+              <div class="wide"><dt>demo</dt><dd><a href="https://bit-transitions.vercel.app" target="_blank" rel="noopener noreferrer" data-cursor="open">bit-transitions.vercel.app ↗</a></dd></div>
+            </dl>
+            <a class="cmd cmd--primary" href="https://github.com/0ph1s/bit_transitions" target="_blank" rel="noopener noreferrer" data-cursor="open">OPEN_REPO ↗</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. SOBRE -->
+    <section class="section about" id="sobre" aria-labelledby="sobre-title">
+      <header class="section__head">
+        <p class="prompt" data-prompt><span class="user">axio@core</span>:~$ <span class="prompt__cmd">cat manifesto.txt</span></p>
+        <h2 class="sr-only" id="sobre-title">Sobre a Axio</h2>
+      </header>
+
+      <p class="manifesto" data-manifesto>A Axio nasce da fusão de três disciplinas que raramente dividem a mesma mesa: o rigor matemático da ciência de dados, a engenharia que coloca produtos na web e o código de baixo nível que entende cada bit. Não vendemos mágica. Entregamos sistemas que podem ser medidos, explicados e escalados.</p>
+
+      <div class="about__grid">
+        <div class="ls" data-out>
+          <p class="prompt prompt--inline"><span class="user">axio@core</span>:~$ <span class="prompt__cmd">ls -l ./principios</span></p>
+          <ul class="ls__list">
+            <li><span class="ls__perm">drwxr-x</span><span class="ls__name">rigor/</span><span class="ls__desc">Estatística, álgebra linear e validação. Cada decisão tem um número por trás.</span></li>
+            <li><span class="ls__perm">drwxr-x</span><span class="ls__name">engenharia/</span><span class="ls__desc">Interfaces rápidas e acessíveis sobre uma arquitetura que não precisa ser reescrita.</span></li>
+            <li><span class="ls__perm">drwxr-x</span><span class="ls__name">baixo-nivel/</span><span class="ls__desc">Entendemos o que acontece abaixo da abstração: memória, bits e performance real.</span></li>
+          </ul>
+        </div>
+
+        <div class="diag" data-out aria-label="Status do sistema">
+          <p class="diag__title">diagnóstico <span>deste navegador</span></p>
+          <dl class="diag__list">
+            <div><dt>SYSTEM</dt><dd><span class="led"></span>ONLINE</dd></div>
+            <div><dt>CORE</dt><dd><span class="led"></span>ACTIVE</dd></div>
+            <div><dt>RENDER</dt><dd data-diag-render>WEBGL</dd></div>
+            <div><dt>FRAMERATE</dt><dd><span data-fps>--</span> FPS</dd></div>
+            <div><dt>THREADS</dt><dd data-diag-threads>--</dd></div>
+            <div><dt>DISPLAY</dt><dd data-diag-display>--</dd></div>
+            <div><dt>UPTIME</dt><dd data-diag-uptime>00:00:00</dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. CONTATO -->
+    <section class="section contact" id="contato" aria-labelledby="contato-title">
+      <header class="section__head">
+        <p class="prompt" data-prompt><span class="user">axio@core</span>:~$ <span class="prompt__cmd">./init_contact</span></p>
+        <h2 class="section__title" id="contato-title" data-out>Vamos falar sobre o seu próximo sistema.</h2>
+      </header>
+
+      <div class="contact__grid">
+        <div class="contact__mail" data-out>
+          <p class="contact__label">e-mail oficial</p>
+          <button class="email" type="button" data-copy="axiodev.contact@gmail.com" data-cursor="copy" aria-describedby="copy-hint">
+            <span class="email__addr">axiodev.contact@gmail.com</span>
+            <span class="email__action" data-copy-label>copiar</span>
+          </button>
+          <p class="contact__hint" id="copy-hint">Clique para copiar o endereço. Ou <a href="mailto:axiodev.contact@gmail.com" data-cursor="open">abra seu cliente de e-mail</a>.</p>
+          <p class="term-log" data-log role="status" aria-live="polite"></p>
+        </div>
+
+        <form class="term-form" data-form novalidate data-out>
+          <p class="term-form__head">mensagem rápida <span>abre seu cliente de e-mail com tudo preenchido</span></p>
+          <div class="field">
+            <label for="f-name">nome</label>
+            <input id="f-name" name="name" type="text" autocomplete="name" required spellcheck="false">
+          </div>
+          <div class="field">
+            <label for="f-email">e-mail</label>
+            <input id="f-email" name="email" type="email" autocomplete="email" required spellcheck="false">
+          </div>
+          <div class="field field--area">
+            <label for="f-msg">mensagem</label>
+            <textarea id="f-msg" name="message" rows="4" required></textarea>
+          </div>
+          <p class="term-form__error" data-form-error role="alert"></p>
+          <button class="cmd cmd--primary" type="submit" data-cursor="run">INIT_CONTACT ↵</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <pre class="ansi ansi--footer" aria-hidden="true">
+ █████╗ ██╗  ██╗██╗ ██████╗
+██╔══██╗╚██╗██╔╝██║██╔═══██╗
+███████║ ╚███╔╝ ██║██║   ██║
+██╔══██║ ██╔██╗ ██║██║   ██║
+██║  ██║██╔╝ ██╗██║╚██████╔╝
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝ ╚═════╝</pre>
+    <div class="footer__row">
+      <p>© <span data-year>2026</span> Axio. Data Science, Web e Apps Development.</p>
+      <ul class="footer__links">
+        <li><a href="https://github.com/0ph1s" target="_blank" rel="noopener noreferrer" data-cursor="open">github ↗</a></li>
+        <li><a href="mailto:axiodev.contact@gmail.com" data-cursor="open">e-mail</a></li>
+        <li><a href="#top" data-scroll-to>cd ~</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+  <script src="main.js" defer></script>
+</body>
+</html>
