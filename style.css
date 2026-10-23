@@ -895,6 +895,18 @@ main { position: relative; z-index: 1; }
 
 .term-form__error { min-height: 1.2em; font-size: 13px; color: var(--hazard); }
 .term-form .cmd { justify-self: start; }
+.term-form .cmd[aria-disabled="true"] { opacity: 0.55; cursor: progress; }
+.term-form__log { margin-top: 0; }
+.term-form__log:empty { display: none; }
+
+/* campo isca: fora da tela em vez de display:none, que alguns robôs ignoram */
+.field--trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
 
 /* ---------------------------------------------------------------------------
    Footer

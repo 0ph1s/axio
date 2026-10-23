@@ -1659,11 +1659,11 @@ function initContact(renderer) {
   let timer = 0;
 
   // a linha de log entra "rasterizada"; o texto completo vai de uma vez para o leitor de tela
-  const print = (msg, isError) => {
-    log.textContent = msg;
-    log.classList.toggle('is-error', !!isError);
-    if (hasGSAP && !reduced()) {
-      gsap.fromTo(log, { clipPath: 'inset(0% 100% 0% 0%)' }, {
+  const print = (msg, isError, target = log) => {
+    target.textContent = msg;
+    target.classList.toggle('is-error', !!isError);
+    if (msg && hasGSAP && !reduced()) {
+      gsap.fromTo(target, { clipPath: 'inset(0% 100% 0% 0%)' }, {
         clipPath: 'inset(0% 0% 0% 0%)',
         duration: 0.4,
         ease: 'steps(20)',
@@ -1705,10 +1705,15 @@ function initContact(renderer) {
     });
   }
 
-  // formulário: valida e abre o cliente de e-mail com tudo preenchido (sem backend)
+  // formulário: valida e envia pela função /api/contact (Resend).
+  // Se o envio falhar, o cliente de e-mail abre com tudo preenchido.
   const form = $('[data-form]');
   const err = $('[data-form-error]');
   if (!form) return;
+  const formLog = $('[data-form-log]');
+  const submit = $('[type="submit"]', form);
+  const trap = $('#f-site');
+  let sending = false;
   const fields = {
     name: $('#f-name'),
     email: $('#f-email'),
@@ -1722,8 +1727,32 @@ function initContact(renderer) {
 
   Object.values(fields).forEach((f) => f.addEventListener('input', () => f.removeAttribute('aria-invalid')));
 
-  form.addEventListener('submit', (e) => {
+  const openMailto = (values) => {
+    const subject = `Contato pelo site: ${values.name}`;
+    const body = `${values.message}\n\n${values.name}\n${values.email}`;
+    window.location.href = `mailto:axiodev.contact@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
+  const post = async (values) => {
+    try {
+      const r = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...values,
+          website: trap ? trap.value : '',
+          elapsed: Math.round(performance.now()), // tempo desde que a página abriu
+        }),
+      });
+      return { status: r.status, data: await r.json().catch(() => ({})) };
+    } catch (e) {
+      return { status: 0, data: {} };
+    }
+  };
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    if (sending) return;
     const values = {};
     Object.entries(fields).forEach(([k, f]) => { values[k] = f.value.trim(); });
 
@@ -1737,11 +1766,30 @@ function initContact(renderer) {
     }
 
     err.textContent = '';
-    const subject = `Contato pelo site: ${values.name}`;
-    const body = `${values.message}\n\n${values.name}\n${values.email}`;
-    print('> Abrindo seu cliente de e-mail com a mensagem pronta.');
-    if (renderer) renderer.params.flash = 1;
-    window.location.href = `mailto:axiodev.contact@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    // aria-disabled em vez de disabled: o botão mantém o foco durante o envio
+    sending = true;
+    submit.setAttribute('aria-disabled', 'true');
+    print('> enviando mensagem...', false, formLog);
+    const { status, data } = await post(values);
+    sending = false;
+    submit.removeAttribute('aria-disabled');
+
+    if (status === 200) {
+      print(`> Mensagem enviada. A resposta chega em ${values.email}.`, false, formLog);
+      form.reset();
+      if (renderer) {
+        renderer.params.flash = 1;
+        renderer.params.glitch = 1;
+      }
+    } else if (status === 400 && data.error) {
+      print('', false, formLog);
+      err.textContent = '> ' + data.error;
+    } else {
+      // servidor indisponível: a mensagem não se perde
+      print('> Não foi possível enviar daqui. Abrindo seu cliente de e-mail com a mensagem pronta.', true, formLog);
+      if (renderer) renderer.params.flash = 1;
+      openMailto(values);
+    }
   });
 }
 

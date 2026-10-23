@@ -306,21 +306,27 @@
         </div>
 
         <form class="term-form" data-form novalidate data-out>
-          <p class="term-form__head">mensagem rápida <span>abre seu cliente de e-mail com tudo preenchido</span></p>
+          <p class="term-form__head">mensagem rápida <span>vai direto para a nossa caixa de entrada</span></p>
           <div class="field">
             <label for="f-name">nome</label>
-            <input id="f-name" name="name" type="text" autocomplete="name" required spellcheck="false">
+            <input id="f-name" name="name" type="text" autocomplete="name" required maxlength="100" spellcheck="false">
           </div>
           <div class="field">
             <label for="f-email">e-mail</label>
-            <input id="f-email" name="email" type="email" autocomplete="email" required spellcheck="false">
+            <input id="f-email" name="email" type="email" autocomplete="email" required maxlength="200" spellcheck="false">
           </div>
           <div class="field field--area">
             <label for="f-msg">mensagem</label>
-            <textarea id="f-msg" name="message" rows="4" required></textarea>
+            <textarea id="f-msg" name="message" rows="4" required maxlength="5000"></textarea>
+          </div>
+          <!-- campo isca: invisível para pessoas, robôs costumam preencher -->
+          <div class="field field--trap" aria-hidden="true">
+            <label for="f-site">site</label>
+            <input id="f-site" name="website" type="text" tabindex="-1" autocomplete="off">
           </div>
           <p class="term-form__error" data-form-error role="alert"></p>
           <button class="cmd cmd--primary" type="submit" data-cursor="run">INIT_CONTACT ↵</button>
+          <p class="term-log term-form__log" data-form-log role="status" aria-live="polite"></p>
         </form>
       </div>
     </section>

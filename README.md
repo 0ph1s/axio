@@ -23,7 +23,18 @@ index.html   estrutura e conteúdo das 5 seções
 404.html     página de erro (a Vercel a serve em qualquer caminho inexistente)
 style.css    tema âmbar/CRT, layout responsivo
 main.js      boot, cursor, rolagem suave, shader ASCII/CRT, animações de scroll, monitor, contato e 404
+api/
+  contact.js função serverless que envia o formulário de contato pelo Resend
 ```
+
+## Formulário de contato
+
+O formulário envia para `/api/contact`, uma função da Vercel que valida os campos e manda o e-mail pelo [Resend](https://resend.com/) para axiodev.contact@gmail.com, com o e-mail de quem escreveu como endereço de resposta.
+
+- Precisa da variável de ambiente `RESEND_API_KEY` na Vercel (Settings → Environment Variables). Depois de criar ou trocar a chave, é preciso um novo deploy.
+- Sem domínio próprio verificado, o Resend envia a partir de `onboarding@resend.dev` e só para o e-mail dono da conta.
+- Contra spam: campo isca invisível, tempo mínimo de 3 s desde a abertura da página e limites de tamanho.
+- Se a função falhar, o site abre o cliente de e-mail do visitante com a mensagem pronta.
 
 ## Deploy
 
