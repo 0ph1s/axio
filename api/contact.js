@@ -6,7 +6,9 @@
 
 'use strict';
 
-const TO = 'axiodev.contact@gmail.com';
+const { contactEmail } = require('./_email');
+
+const TO ='axiodev.contact@gmail.com';
 // sem domínio próprio, o Resend só envia a partir do endereço de testes dele
 const FROM = 'Site Axio <onboarding@resend.dev>';
 const LIMITS = { name: 100, email: 200, message: 5000 };
@@ -54,6 +56,8 @@ module.exports = async (req, res) => {
     return send(res, 503, { error: 'Envio indisponível no momento.' });
   }
 
+  const { subject, html, text } = contactEmail({ name, email, message });
+
   try {
     const r = await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -65,8 +69,9 @@ module.exports = async (req, res) => {
         from: FROM,
         to: TO,
         reply_to: email, // "Responder" no Gmail vai direto para quem escreveu
-        subject: `Contato pelo site: ${name}`,
-        text: `${message}\n\n--\n${name}\n${email}\nEnviado pelo formulário do site.`,
+        subject,
+        html,
+        text,
       }),
     });
     if (!r.ok) {

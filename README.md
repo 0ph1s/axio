@@ -25,6 +25,7 @@ style.css    tema âmbar/CRT, layout responsivo
 main.js      boot, cursor, rolagem suave, shader ASCII/CRT, animações de scroll, monitor, contato e 404
 api/
   contact.js função serverless que envia o formulário de contato pelo Resend
+  _email.js  template do e-mail (HTML com estilos inline + versão em texto)
 ```
 
 ## Formulário de contato
