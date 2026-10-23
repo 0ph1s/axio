@@ -2,6 +2,8 @@
 
 Landing page institucional da **Axio**: Data Science, Web e Apps Development.
 
+**Site:** https://axio-dev.vercel.app
+
 Estética retro-futurista de terminal: o fundo e o logo são renderizados em ASCII por um shader GLSL próprio, com efeitos CRT (scanlines, halo de fósforo, varredura e vinheta).
 
 ## Stack
@@ -20,6 +22,10 @@ index.html   estrutura e conteúdo das 5 seções
 style.css    tema âmbar/CRT, layout responsivo
 main.js      boot, cursor, shader ASCII/CRT, animações de scroll, monitor e contato
 ```
+
+## Deploy
+
+Hospedado na [Vercel](https://vercel.com/), ligado a este repositório: cada push na `main` publica uma nova versão em produção.
 
 ## Rodando localmente
 
