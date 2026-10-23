@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="pt-BR" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>404 | AXIO</title>
+  <meta name="description" content="Página não encontrada.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#120D08">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23120D08'/%3E%3Ctext x='16' y='24' font-family='monospace' font-size='22' font-weight='700' text-anchor='middle' fill='%23FFB547'%3EA%3C/text%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=VT323&display=swap" rel="stylesheet">
+  <!-- caminhos absolutos: esta página responde em qualquer URL inexistente -->
+  <link rel="stylesheet" href="/style.css">
+
+  <script>document.documentElement.classList.replace('no-js', 'js');</script>
+</head>
+<body data-page="404" class="is-pending">
+  <!-- Fundo: shader ASCII + CRT (WebGL) -->
+  <canvas id="gl" class="gl" aria-hidden="true"></canvas>
+  <div class="crt" aria-hidden="true"></div>
+
+  <!-- Cursor customizado -->
+  <div class="cursor" aria-hidden="true">
+    <span class="cursor__frame"></span>
+    <span class="cursor__dot"></span>
+    <span class="cursor__label"></span>
+  </div>
+
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+  <!-- HUD superior -->
+  <header class="hud hud--top">
+    <a class="brand" href="/" aria-label="AXIO, página inicial">AXIO<span class="brand__caret" aria-hidden="true">_</span></a>
+    <nav class="nav" id="nav" aria-label="Principal">
+      <ul>
+        <li><a href="/#servicos">cd servicos</a></li>
+        <li><a href="/#projetos">cd projetos</a></li>
+        <li><a href="/#sobre">cd sobre</a></li>
+        <li><a href="/#contato">cd contato</a></li>
+      </ul>
+    </nav>
+    <div class="hud__status">
+      <span class="led led--error" aria-hidden="true"></span>
+      <span class="hud__online">exit 404</span>
+      <time class="clock" data-clock>00:00:00</time>
+    </div>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav">menu</button>
+  </header>
+
+  <!-- HUD inferior: telemetria ao vivo -->
+  <div class="hud hud--bottom" aria-hidden="true">
+    <span>x <b data-mx>0000</b> y <b data-my>0000</b></span>
+    <span class="hud__progress"><i data-progress></i></span>
+    <span><b data-fps>--</b> fps</span>
+  </div>
+
+  <main id="conteudo">
+    <section class="hero nf" aria-labelledby="nf-title">
+      <div>
+        <p class="hero__path"><span class="user">visitante@axio</span>:~$ <span data-hero-cmd>cd /pagina</span></p>
+        <p class="nf__err" data-hero-out>bash: cd: <span data-path>/pagina</span>: Arquivo ou diretório inexistente</p>
+      </div>
+
+      <div class="hero__logo nf__logo" data-logo="404" aria-hidden="true">
+        <pre class="ansi ansi--hero">
+██╗  ██╗ ██████╗ ██╗  ██╗
+██║  ██║██╔═████╗██║  ██║
+███████║██║██╔██║███████║
+╚════██║████╔╝██║╚════██║
+     ██║╚██████╔╝     ██║
+     ╚═╝ ╚═════╝      ╚═╝</pre>
+      </div>
+
+      <div class="hero__grid nf__grid">
+        <div class="nf__main">
+          <h1 class="hero__headline" id="nf-title" data-hero-line><span class="sr-only">Erro 404: </span>Esta página não existe.</h1>
+          <p class="hero__lead" data-hero-line>O link pode estar quebrado ou o endereço foi digitado com erro. Volte ao início ou siga direto para uma das seções.</p>
+          <div class="hero__ctas" data-hero-line>
+            <a class="cmd cmd--primary" href="/" data-cursor="run">RETURN_HOME</a>
+            <button class="cmd" type="button" data-back data-cursor="run" hidden>GO_BACK</button>
+          </div>
+        </div>
+
+        <div class="ls" data-hero-line>
+          <p class="nf__suggest" data-suggest hidden>Você quis dizer <a href="/" data-cursor="run">cd ~</a>?</p>
+          <p class="prompt prompt--inline"><span class="user">visitante@axio</span>:~$ <span class="prompt__cmd">ls ~</span></p>
+          <ul class="ls__list">
+            <li><a class="ls__name" href="/#servicos">servicos/</a><span class="ls__desc">Data Science, Web e Apps Development.</span></li>
+            <li><a class="ls__name" href="/#projetos">projetos/</a><span class="ls__desc">Três repositórios abertos com telemetria ao vivo.</span></li>
+            <li><a class="ls__name" href="/#sobre">sobre/</a><span class="ls__desc">Manifesto e diagnóstico do sistema.</span></li>
+            <li><a class="ls__name" href="/#contato">contato/</a><span class="ls__desc">E-mail e mensagem rápida.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"></script>
+  <script src="/main.js" defer></script>
+</body>
+</html>

@@ -1,14 +1,15 @@
 /* =========================================================================
    AXIO // main.js
-   Vanilla ES6+ · GSAP + ScrollTrigger · WebGL (GLSL) ASCII/CRT
+   Vanilla ES6+ · GSAP + ScrollTrigger · Lenis · WebGL (GLSL) ASCII/CRT
    -------------------------------------------------------------------------
    1. Utilidades e estado
-   2. Boot, cursor, HUD e navegação
+   2. Boot, cursor, HUD, rolagem suave e navegação
    3. Renderer WebGL: shader ASCII + CRT (fundo e logo do hero)
    4. Animações de scroll (ScrollTrigger)
    5. Monitor de telemetria dos projetos (Canvas 2D)
    6. Contato (copiar e-mail, formulário)
-   7. Init
+   7. Página 404
+   8. Init
    ========================================================================= */
 
 'use strict';
@@ -139,7 +140,7 @@ function typeInto(el, text, cps = 42) {
 }
 
 /* -------------------------------------------------------------------------
-   2. Boot, cursor, HUD e navegação
+   2. Boot, cursor, HUD, rolagem suave e navegação
    ------------------------------------------------------------------------- */
 
 function runBoot(onDone) {
@@ -302,7 +303,28 @@ function initHUD() {
   onScroll();
 }
 
-function initNav() {
+/**
+ * Rolagem com inércia (Lenis) no mesmo ticker do GSAP, para o ScrollTrigger
+ * e o shader lerem a posição já atualizada em cada quadro. Toque continua
+ * nativo; com movimento reduzido a rolagem fica como o sistema define.
+ */
+function initSmoothScroll() {
+  if (!window.Lenis || !hasGSAP || reduced()) return null;
+  const lenis = new Lenis({
+    lerp: 0.085,
+    wheelMultiplier: 0.95,
+    allowNestedScroll: true, // textarea com texto longo rola por dentro
+    autoRaf: false,
+  });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add((time) => lenis.raf(time * 1000));
+  gsap.ticker.lagSmoothing(0);
+  return lenis;
+}
+
+const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+function initNav(lenis) {
   const header = $('.hud--top');
   const menuBtn = $('.menu-btn');
 
@@ -326,7 +348,9 @@ function initNav() {
       e.preventDefault();
       closeMenu();
       const y = id === '#top' ? 0 : target.getBoundingClientRect().top + window.scrollY;
-      if (hasGSAP && window.ScrollToPlugin) {
+      if (lenis) {
+        lenis.scrollTo(y, { duration: 1.2, easing: easeInOutCubic });
+      } else if (hasGSAP && window.ScrollToPlugin) {
         gsap.to(window, { scrollTo: { y, autoKill: true }, duration: reduced() ? 0 : 1.1, ease: 'power3.inOut' });
       } else {
         window.scrollTo({ top: y, behavior: reduced() ? 'auto' : 'smooth' });
@@ -751,6 +775,7 @@ function createRenderer() {
   /** Textura do logo: R = letras, G = sombra deslocada (estilo ANSI shadow). */
   function buildLogo() {
     if (!logoEl) return;
+    const text = logoEl.dataset.logo || 'AXIO';
     const r = logoEl.getBoundingClientRect();
     if (r.width < 2 || r.height < 2) return;
     const tw = Math.min(2048, Math.round(r.width * Math.min(dpr, 1.25)));
@@ -764,22 +789,22 @@ function createRenderer() {
 
     const font = (px) => `700 ${px}px "IBM Plex Mono", ui-monospace, monospace`;
     ctx.font = font(100);
-    const m = ctx.measureText('AXIO');
+    const m = ctx.measureText(text);
     const capH = (m.actualBoundingBoxAscent || 72) + (m.actualBoundingBoxDescent || 0);
     const size = Math.min((tw * 0.94) / m.width, (th * 0.8) / capH) * 100;
     ctx.font = font(size);
     ctx.textAlign = 'center';
     ctx.textBaseline = 'alphabetic';
-    const mm = ctx.measureText('AXIO');
+    const mm = ctx.measureText(text);
     const asc = mm.actualBoundingBoxAscent || size * 0.7;
     const desc = mm.actualBoundingBoxDescent || 0;
     const y = th / 2 + (asc - desc) / 2 - size * 0.03;
 
     ctx.fillStyle = '#00ff00';
-    ctx.fillText('AXIO', tw / 2 + size * 0.07, y + size * 0.07);
+    ctx.fillText(text, tw / 2 + size * 0.07, y + size * 0.07);
     ctx.globalCompositeOperation = 'lighter';
     ctx.fillStyle = '#ff0000';
-    ctx.fillText('AXIO', tw / 2, y);
+    ctx.fillText(text, tw / 2, y);
 
     gl.bindTexture(gl.TEXTURE_2D, logoTex);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, c);
@@ -1018,12 +1043,15 @@ function initScroll(renderer) {
   }
 
   // rodapé: o logo ANSI decodifica uma vez
-  ScrollTrigger.create({
-    trigger: '.footer',
-    start: 'top 85%',
-    once: true,
-    onEnter: () => decodeArt($('.ansi--footer'), 1.2),
-  });
+  const footerArt = $('.ansi--footer');
+  if (footerArt) {
+    ScrollTrigger.create({
+      trigger: '.footer',
+      start: 'top 85%',
+      once: true,
+      onEnter: () => decodeArt(footerArt, 1.2),
+    });
+  }
 
   if (renderer) ScrollTrigger.addEventListener('refresh', renderer.measure);
 }
@@ -1056,6 +1084,7 @@ function initPanes() {
 function heroIntro(renderer) {
   const lines = $$('[data-hero-line]');
   const cmd = $('[data-hero-cmd]');
+  const outs = $$('[data-hero-out]'); // saída do comando (ex.: o erro da 404)
 
   if (!hasGSAP || reduced()) {
     if (renderer) renderer.params.reveal = 1;
@@ -1064,8 +1093,20 @@ function heroIntro(renderer) {
 
   const cmdText = cmd.textContent;
   cmd.textContent = '';
+  gsap.set(outs, { autoAlpha: 0 });
+  const printOuts = () => {
+    if (!outs.length) return;
+    gsap.fromTo(outs, { autoAlpha: 1, clipPath: 'inset(0% 100% 0% 0%)' }, {
+      clipPath: 'inset(0% 0% 0% 0%)',
+      duration: 0.4,
+      ease: 'steps(20)',
+      stagger: 0.1,
+      clearProps: 'clipPath',
+    });
+    if (renderer) renderer.params.glitch = 1;
+  };
   const tl = gsap.timeline();
-  tl.add(() => typeInto(cmd, cmdText, 30), 0);
+  tl.add(() => typeInto(cmd, cmdText, 30).then(printOuts), 0);
   if (renderer) tl.to(renderer.params, { reveal: 1, duration: 1.9, ease: 'power2.inOut' }, 0.1);
   tl.to(lines, {
     clipPath: 'inset(0% 0% 0% 0%)',
@@ -1704,7 +1745,73 @@ function initContact(renderer) {
 }
 
 /* -------------------------------------------------------------------------
-   7. Init
+   7. Página 404
+   O endereço pedido vira um comando que falhou; se ele lembra uma seção,
+   a página sugere o caminho certo.
+   ------------------------------------------------------------------------- */
+
+const ROUTES = [
+  { dir: 'servicos', words: ['servicos', 'servico', 'services', 'service'] },
+  { dir: 'projetos', words: ['projetos', 'projeto', 'projects', 'project', 'portfolio', 'trabalhos'] },
+  { dir: 'sobre', words: ['sobre', 'about', 'manifesto', 'quem-somos'] },
+  { dir: 'contato', words: ['contato', 'contact', 'email', 'fale-conosco'] },
+];
+
+/** Distância de edição (Levenshtein) usando uma única linha da matriz. */
+function editDistance(a, b) {
+  const row = Array.from({ length: b.length + 1 }, (_, j) => j);
+  for (let i = 1; i <= a.length; i++) {
+    let diag = row[0];
+    row[0] = i;
+    for (let j = 1; j <= b.length; j++) {
+      const up = row[j];
+      row[j] = Math.min(up + 1, row[j - 1] + 1, diag + (a[i - 1] === b[j - 1] ? 0 : 1));
+      diag = up;
+    }
+  }
+  return row[b.length];
+}
+
+function initNotFound() {
+  if (document.body.dataset.page !== '404') return;
+
+  let path = location.pathname;
+  try { path = decodeURIComponent(path); } catch (e) { /* mantém o caminho codificado */ }
+  const shown = path.length > 48 ? path.slice(0, 47) + '…' : path;
+  const cmd = $('[data-hero-cmd]');
+  if (cmd) cmd.textContent = 'cd ' + shown;
+  $$('[data-path]').forEach((el) => { el.textContent = shown; });
+
+  // cada trecho do caminho é comparado com os diretórios do site
+  const parts = path.toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .split('/')
+    .map((s) => s.replace(/\.html?$/, ''))
+    .filter(Boolean);
+  let best = null;
+  parts.forEach((p) => ROUTES.forEach((r) => r.words.forEach((w) => {
+    const d = editDistance(p, w);
+    if (d <= Math.max(1, Math.floor(w.length / 3)) && (!best || d < best.d)) best = { d, dir: r.dir };
+  })));
+
+  const suggest = $('[data-suggest]');
+  if (best && suggest) {
+    const link = $('a', suggest);
+    link.href = '/#' + best.dir;
+    link.textContent = 'cd ~/' + best.dir;
+    suggest.hidden = false;
+  }
+
+  // "cd -" volta ao diretório anterior, como no shell: só aparece se houver para onde voltar
+  const back = $('[data-back]');
+  if (back && history.length > 1) {
+    back.hidden = false;
+    back.addEventListener('click', () => history.back());
+  }
+}
+
+/* -------------------------------------------------------------------------
+   8. Init
    ------------------------------------------------------------------------- */
 
 function init() {
@@ -1713,10 +1820,12 @@ function init() {
     if (window.ScrollToPlugin) gsap.registerPlugin(ScrollToPlugin);
   }
 
+  const lenis = initSmoothScroll();
   trackPointer();
   initHUD();
-  initNav();
+  initNav(lenis);
   initPanes();
+  initNotFound();
 
   const renderer = createRenderer();
   const diagRender = $('[data-diag-render]');
@@ -1757,6 +1866,7 @@ function init() {
   });
 
   runBoot(() => heroIntro(renderer));
+  document.body.classList.remove('is-pending');
 }
 
 init();

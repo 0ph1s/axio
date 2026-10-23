@@ -53,7 +53,15 @@ body {
   overflow-x: hidden;
 }
 
+/* rolagem suave (Lenis): o documento rola nativamente, só a entrada é suavizada */
+html.lenis,
+html.lenis body { height: auto; }
+.lenis.lenis-stopped { overflow: clip; }
+.lenis [data-lenis-prevent] { overscroll-behavior: contain; }
+
 ::selection { background: var(--amber); color: var(--glass); }
+
+[hidden] { display: none !important; }
 
 img, canvas, svg { display: block; max-width: 100%; }
 a { color: inherit; }
@@ -916,6 +924,62 @@ main { position: relative; z-index: 1; }
 .footer__links { display: flex; gap: 24px; }
 .footer__links a { color: var(--amber); text-decoration: none; }
 .footer__links a:hover { color: var(--hot); text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------------------------------------------------------------------------
+   Página 404
+   --------------------------------------------------------------------------- */
+
+/* antes do main.js: esconde o que a entrada vai revelar; sem JS, aparece em 3 s */
+.js .is-pending [data-hero-cmd],
+.js .is-pending [data-hero-out],
+.js .is-pending [data-hero-line] {
+  visibility: hidden;
+  animation: show-late 0s 3s forwards;
+}
+@keyframes show-late { to { visibility: visible; } }
+
+.nf { gap: clamp(16px, 3vh, 32px); }
+.nf .hero__path { overflow-wrap: anywhere; }
+
+.nf__err {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--hazard);
+  overflow-wrap: anywhere;
+  text-shadow: 0 0 2px var(--glass), 0 0 10px var(--glass), 0 0 18px var(--glass);
+}
+
+/* "404" é mais estreito que "AXIO": caixa própria, alinhada à esquerda */
+.hero__logo.nf__logo {
+  width: min(100%, 76vh);
+  aspect-ratio: 2.2 / 1;
+  max-height: none;
+}
+.no-webgl .hero__logo.nf__logo { width: auto; aspect-ratio: auto; }
+
+.nf__grid { align-items: start; }
+.nf__main { display: grid; gap: 24px; justify-items: start; }
+
+.nf__suggest {
+  margin-bottom: 18px;
+  color: var(--text);
+  text-shadow: 0 0 2px var(--glass), 0 0 10px var(--glass);
+}
+.nf__suggest a { color: var(--amber); font-weight: 600; text-underline-offset: 3px; }
+.nf__suggest a:hover { color: var(--hot); }
+
+/* "ls" sem -l: só nome e descrição, linhas mais baixas */
+.nf .ls__list li {
+  grid-template-columns: 9em minmax(0, 1fr);
+  padding: 10px 0;
+}
+.ls__name[href] { text-decoration: none; }
+.ls__name[href]:hover { color: var(--hot); text-decoration: underline; text-underline-offset: 3px; }
+
+.led--error {
+  background: var(--hazard);
+  box-shadow: 0 0 6px rgba(255, 90, 54, 0.7), 0 0 18px rgba(255, 90, 54, 0.3);
+}
 
 /* ---------------------------------------------------------------------------
    Responsivo

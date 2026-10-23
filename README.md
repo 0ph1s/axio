@@ -12,6 +12,7 @@ Estética retro-futurista de terminal: o fundo e o logo são renderizados em ASC
 - CSS3 com variáveis (sem framework)
 - JavaScript ES6+ vanilla
 - [GSAP](https://gsap.com/) 3.12.5 + ScrollTrigger + ScrollToPlugin (via CDN)
+- [Lenis](https://lenis.darkroom.engineering/) 1.3.26 para a rolagem suave (via CDN)
 - WebGL 1 com shaders GLSL escritos à mão (sem bibliotecas)
 - Canvas 2D para o monitor de telemetria dos projetos
 
@@ -19,8 +20,9 @@ Estética retro-futurista de terminal: o fundo e o logo são renderizados em ASC
 
 ```
 index.html   estrutura e conteúdo das 5 seções
+404.html     página de erro (a Vercel a serve em qualquer caminho inexistente)
 style.css    tema âmbar/CRT, layout responsivo
-main.js      boot, cursor, shader ASCII/CRT, animações de scroll, monitor e contato
+main.js      boot, cursor, rolagem suave, shader ASCII/CRT, animações de scroll, monitor, contato e 404
 ```
 
 ## Deploy
@@ -51,3 +53,5 @@ python -m http.server 8000
 - A resolução do canvas cai automaticamente se o FPS ficar abaixo de ~40.
 - `prefers-reduced-motion` é respeitado; sem WebGL, um logo ASCII estático assume o lugar.
 - A PCA do canal 2 é calculada no navegador com dados do NASA Planetary Fact Sheet.
+- A rolagem suave usa o mesmo ticker do GSAP, então ScrollTrigger e shader leem a posição já atualizada em cada quadro. No toque e com movimento reduzido, a rolagem é a nativa.
+- A 404 usa o mesmo shader com "404" no lugar do logo, mostra o caminho pedido como um `cd` que falhou e sugere a seção mais parecida (distância de edição).
