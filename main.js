@@ -318,7 +318,8 @@ function initSmoothScroll() {
   });
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add((time) => lenis.raf(time * 1000));
-  gsap.ticker.lagSmoothing(0);
+  // lagSmoothing fica no padrão: com 0, o tempo travado no carregamento
+  // seria "pulado" e o boot terminaria num único quadro
   return lenis;
 }
 
